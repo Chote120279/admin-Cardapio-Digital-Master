@@ -4,9 +4,6 @@ import { LoginComponent } from './views/auth/login/login.component';
 import { SettingsComponent } from './views/admin/settings/settings.component';
 import { AuthService } from './guards/auth-guard.service';
 import { FirebaseService } from './services/firebase.service';
-// Fixed imports - correct paths to components
-import { CardSettingsComponent } from "./components/card-settings/card-settings.component";
-import { CardProfileComponent } from "./components/card-profile/card-profile.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
