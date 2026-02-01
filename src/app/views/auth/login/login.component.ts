@@ -62,7 +62,20 @@ export class LoginComponent {
       await this.authService.login(this.email, this.password);
       this.router.navigate(['/admin']);
     } catch (error: any) {
-      this.errorMessage = 'Erro ao fazer login. Verifique suas credenciais.';
+      // Provide specific error messages based on Firebase error codes
+      if (error.code === 'auth/user-not-found') {
+        this.errorMessage = 'Email não encontrado. Verifique o email digitado.';
+      } else if (error.code === 'auth/wrong-password') {
+        this.errorMessage = 'Senha incorreta. Tente novamente.';
+      } else if (error.code === 'auth/too-many-requests') {
+        this.errorMessage = 'Muitas tentativas de login. Tente novamente mais tarde.';
+      } else if (error.code === 'auth/invalid-email') {
+        this.errorMessage = 'Email inválido. Verifique o formato do email.';
+      } else if (error.code === 'auth/user-disabled') {
+        this.errorMessage = 'Esta conta foi desabilitada. Contate o administrador.';
+      } else {
+        this.errorMessage = 'Erro ao fazer login. Verifique suas credenciais.';
+      }
       console.error('Erro no login:', error);
     }
   }

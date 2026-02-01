@@ -114,6 +114,10 @@ import { FirebaseService } from '../../../services/firebase.service';
             {{ uploading ? 'Salvando...' : 'Salvar Produto' }}
           </button>
         </div>
+
+        <div class="error-alert" *ngIf="errorMessage">
+          <p>{{ errorMessage }}</p>
+        </div>
       </form>
     </div>
   `,
@@ -300,6 +304,19 @@ import { FirebaseService } from '../../../services/firebase.service';
       cursor: not-allowed;
     }
 
+    .error-alert {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+
+    .error-alert p {
+      margin: 0;
+    }
+
     @media (max-width: 768px) {
       .form-row {
         grid-template-columns: 1fr;
@@ -324,6 +341,7 @@ export class ProdutoFormComponent implements OnInit {
   selectedFileName: string = '';
   imagePreview: string = '';
   uploading: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -398,25 +416,29 @@ export class ProdutoFormComponent implements OnInit {
         imagemUrl = await this.firebaseService.uploadImagem(this.selectedFile, fileName);
       }
 
-      const produtoData: Produto = {
+      const produtoData: any = {
         ...this.produtoForm.value,
         imagemUrl,
-        createdAt: new Date(),
         updatedAt: new Date()
       };
 
+      // Only set createdAt for new products
+      if (!this.isEditMode) {
+        produtoData.createdAt = new Date();
+      }
+
       if (this.isEditMode && this.produtoId) {
         await this.produtoService.atualizarProduto(this.produtoId, produtoData);
-        alert('Produto atualizado com sucesso!');
+        console.log('Produto atualizado com sucesso!');
       } else {
-        await this.produtoService.criarProduto(produtoData);
-        alert('Produto criado com sucesso!');
+        await this.produtoService.criarProduto(produtoData as Produto);
+        console.log('Produto criado com sucesso!');
       }
 
       this.voltar();
     } catch (error) {
       console.error('Erro ao salvar produto:', error);
-      alert('Erro ao salvar produto. Verifique os dados e tente novamente.');
+      this.errorMessage = 'Erro ao salvar produto. Verifique os dados e tente novamente.';
     } finally {
       this.uploading = false;
     }

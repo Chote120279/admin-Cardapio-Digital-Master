@@ -5,7 +5,7 @@ export type AlertType = 'success' | 'error' | 'warning' | 'info';
 @Component({
   selector: 'app-alert',
   template: `
-    <div class="alert" *ngIf="show" [class]="type" [@slideIn]>
+    <div class="alert" *ngIf="show" [class]="type">
       <div class="alert-icon">
         <span *ngIf="type === 'success'">✓</span>
         <span *ngIf="type === 'error'">✕</span>
