@@ -386,8 +386,26 @@ export class ProdutoFormComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      // Security: Block SVG files to prevent XSS attacks
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      
+      if (!allowedTypes.includes(file.type.toLowerCase())) {
+        this.errorMessage = 'Apenas arquivos JPG, PNG, GIF e WebP são permitidos. SVG não é suportado por questões de segurança.';
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      // Check file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        this.errorMessage = 'O arquivo é muito grande. O tamanho máximo é 5MB.';
+        event.target.value = '';
+        return;
+      }
+
       this.selectedFile = file;
       this.selectedFileName = file.name;
+      this.errorMessage = ''; // Clear any previous errors
 
       // Preview
       const reader = new FileReader();

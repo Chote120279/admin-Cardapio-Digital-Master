@@ -1,0 +1,40 @@
+// Firebase Firestore Security Rules
+// Deploy these rules to protect your database
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products collection
+    match /produtos/{produtoId} {
+      // Anyone can read products
+      allow read: if true;
+      
+      // Only authenticated users can write
+      allow create, update, delete: if request.auth != null;
+    }
+    
+    // Categories collection
+    match /categorias/{categoriaId} {
+      // Anyone can read categories
+      allow read: if true;
+      
+      // Only authenticated users can write
+      allow create, update, delete: if request.auth != null;
+    }
+    
+    // Configuration collection
+    match /config/{configId} {
+      // Only authenticated users can read config
+      allow read: if request.auth != null;
+      
+      // Only authenticated users can write config
+      allow create, update, delete: if request.auth != null;
+    }
+    
+    // Default deny all for other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

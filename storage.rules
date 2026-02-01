@@ -1,0 +1,26 @@
+// Firebase Storage Security Rules
+// Deploy these rules to protect against malicious file uploads
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /produtos/{imageId} {
+      // Allow anyone to read product images
+      allow read: if true;
+      
+      // Only authenticated users can upload
+      // Block SVG files for security
+      // Limit file size to 5MB
+      allow write: if request.auth != null 
+                   && request.resource.contentType.matches('image/(jpeg|jpg|png|gif|webp)')
+                   && !request.resource.contentType.matches('image/svg.*')
+                   && request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    match /{allPaths=**} {
+      // Default rules for other paths
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

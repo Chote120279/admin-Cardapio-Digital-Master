@@ -188,11 +188,20 @@ Acesse `http://localhost:4200` no seu navegador.
 ### 6. Regras de Segurança Recomendadas
 
 #### Firestore Rules
+Copie e cole no Firebase Console > Firestore Database > Regras:
 ```
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
+    match /produtos/{produtoId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
+    }
+    match /categorias/{categoriaId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
+    }
+    match /config/{configId} {
       allow read, write: if request.auth != null;
     }
   }
@@ -200,17 +209,25 @@ service cloud.firestore {
 ```
 
 #### Storage Rules
+Copie e cole no Firebase Console > Storage > Regras:
 ```
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
+    match /produtos/{imageId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null 
+                   && request.resource.contentType.matches('image/(jpeg|jpg|png|gif|webp)')
+                   && !request.resource.contentType.matches('image/svg.*')
+                   && request.resource.size < 5 * 1024 * 1024;
     }
   }
 }
 ```
+
+**Nota de Segurança:** As regras de Storage bloqueiam arquivos SVG para prevenir ataques XSS. Apenas JPG, PNG, GIF e WebP são permitidos.
+
+### 7. Deploy das Regras
 
 ## 📱 Como Usar
 
@@ -359,6 +376,29 @@ Gerencia CRUD de categorias.
 - **precoValidator** - Valida valores monetários
 - **urlImagemValidator** - Valida URLs de imagens
 - **nomeUnicoValidator** - Valida nomes únicos (async)
+
+## 🔒 Segurança
+
+Este projeto implementa várias medidas de segurança:
+
+- ✅ **Autenticação Firebase** - Login seguro
+- ✅ **Guards de Rota** - Proteção de rotas administrativas  
+- ✅ **Validação de Upload** - Apenas JPG, PNG, GIF e WebP (SVG bloqueado)
+- ✅ **Content Security Policy** - Proteção contra XSS
+- ✅ **Firebase Security Rules** - Controle de acesso ao banco e storage
+- ✅ **Limite de Tamanho** - Máximo 5MB por imagem
+
+### ⚠️ Vulnerabilidades Conhecidas
+
+O Angular 17.3.12 possui vulnerabilidades conhecidas de XSS relacionadas a SVG. Veja o arquivo [SECURITY.md](SECURITY.md) para detalhes completos e mitigações implementadas.
+
+**Mitigações Aplicadas:**
+- Bloqueio de arquivos SVG no upload
+- Content Security Policy headers
+- Regras de segurança do Firebase Storage
+- Validação de tipo de arquivo
+
+**Recomendação:** Para produção, considere atualizar para Angular 19.2.18+ que contém as correções de segurança.
 
 ## 🏗 Build para Produção
 
