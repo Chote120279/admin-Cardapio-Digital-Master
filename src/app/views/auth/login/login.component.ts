@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseService } from '../../../services/firebase.service';
 
-// Wrong imports from problem statement (lines 7-8)
-import { CardSettingsComponent } from "./card-settings/card-settings.component";
-import { CardProfileComponent } from "./card-profile/card-profile.component";
+// Fixed imports - correct paths to components
+import { CardSettingsComponent } from "../../../components/card-settings/card-settings.component";
+import { CardProfileComponent } from "../../../components/card-profile/card-profile.component";
 
 @Component({
   selector: 'app-login',
@@ -25,5 +25,5 @@ export class LoginComponent {
   }
 }
 
-// Problem #1: Exporting wrong component (SettingsComponent instead of LoginComponent)
-export { LoginComponent as SettingsComponent };
+// Fixed: Properly export LoginComponent
+// export { LoginComponent as SettingsComponent }; // REMOVED - this was the bug

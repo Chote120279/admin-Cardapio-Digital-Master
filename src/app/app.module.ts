@@ -33,5 +33,5 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AppModule { }
 
-// Problem #3: Exporting wrong module (AppRoutingModule instead of AppModule)
-export { AppRoutingModule };
+// Fixed: Properly export AppModule (was exporting AppRoutingModule)
+// export { AppRoutingModule }; // REMOVED - this was the bug

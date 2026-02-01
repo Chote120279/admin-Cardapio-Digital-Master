@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 
-// Wrong imports from problem statement (lines 7-8)
-import { CardSettingsComponent } from "./card-settings/card-settings.component";
-import { CardProfileComponent } from "./card-profile/card-profile.component";
+// Fixed imports - correct paths to components
+import { CardSettingsComponent } from "../../../components/card-settings/card-settings.component";
+import { CardProfileComponent } from "../../../components/card-profile/card-profile.component";
 
 @Component({
   selector: 'app-settings',

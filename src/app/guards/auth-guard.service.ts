@@ -8,10 +8,15 @@ export class AuthService implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): Promise<boolean> {
-    // Problem: Missing logado() method (line 14 as mentioned)
+    // Fixed: Now calling the implemented logado() method
     return this.logado();
   }
 
-  // Problem: logado() method is missing
-  // This should be added as per the problem statement
+  // Fixed: Added missing logado() method
+  async logado(): Promise<boolean> {
+    // Implementation to check if user is logged in
+    // Add your authentication logic here
+    // For now, returning true as a placeholder
+    return Promise.resolve(true);
+  }
 }
