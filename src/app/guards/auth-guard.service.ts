@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { Observable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+/**
+ * AuthGuard - Guard to protect routes that require authentication
+ */
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements CanActivate {
-  constructor(private router: Router) {}
+export class AuthGuard implements CanActivate {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  canActivate(): Promise<boolean> {
-    // Fixed: Now calling the implemented logado() method
-    return this.logado();
-  }
-
-  // Fixed: Added missing logado() method
-  async logado(): Promise<boolean> {
-    // Implementation to check if user is logged in
-    // Add your authentication logic here
-    // For now, returning true as a placeholder
-    return Promise.resolve(true);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return from(this.authService.logado()).pipe(
+      map(user => {
+        if (user) {
+          return true;
+        } else {
+          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
+          return false;
+        }
+      })
+    );
   }
 }
