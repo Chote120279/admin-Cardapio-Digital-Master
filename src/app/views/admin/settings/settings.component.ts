@@ -8,7 +8,8 @@ import { FirebaseService } from '../../../services/firebase.service';
       <h1>Settings Component</h1>
     </div>
   `,
-  styles: []
+  styles: [],
+  standalone: false
 })
 export class SettingsComponent {
   constructor(private firebaseService: FirebaseService) {}

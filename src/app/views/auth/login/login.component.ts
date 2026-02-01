@@ -5,7 +5,8 @@ import { FirebaseService } from '../../../services/firebase.service';
 @Component({
   selector: 'app-login',
   template: '<div>Login Component</div>',
-  styles: []
+  styles: [],
+  standalone: false
 })
 export class LoginComponent {
   constructor(
