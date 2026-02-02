@@ -7,12 +7,16 @@ import { CanActivate, Router } from '@angular/router';
 export class AuthService implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate(): Promise<boolean> {
-    // Fixed: Now calling the implemented logado() method
-    return this.logado();
+  async canActivate(): Promise<boolean> {
+    const isLoggedIn = await this.logado();
+    if (!isLoggedIn) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
   }
 
-  // Fixed: Added missing logado() method
+  // Check if user is logged in
   async logado(): Promise<boolean> {
     // Implementation to check if user is logged in
     // Add your authentication logic here
