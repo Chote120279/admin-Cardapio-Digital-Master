@@ -80,6 +80,17 @@ describe('OrdersComponent', () => {
   });
 
   it('deve calcular o total dos pedidos corretamente', () => {
+    // Testa com valores conhecidos
+    const pedido1 = component.pedidos[0]; // 2x PASTEL (8.00) + 1x Coca (5.00) = 21.00
+    expect(pedido1.total).toBe(21.00);
+    
+    const pedido2 = component.pedidos[1]; // 3x Espeto (12.00) = 36.00
+    expect(pedido2.total).toBe(36.00);
+    
+    const pedido3 = component.pedidos[2]; // 1x PASTEL (8.00) + 2x Espeto (12.00) = 32.00
+    expect(pedido3.total).toBe(32.00);
+    
+    // Verifica que a soma dos itens corresponde ao total
     component.pedidos.forEach(pedido => {
       const totalCalculado = pedido.itens.reduce((sum, item) => 
         sum + (item.preco * item.quantidade), 0
