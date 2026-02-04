@@ -138,8 +138,9 @@ interface Categoria {
                 justify-content: center; z-index: 1000;"
          (click)="closeModal()">
       
-      <div style="background: white; border-radius: 1.5rem; padding: 2rem; 
-                  max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;
+      <div class="modal-content-scrollable"
+           style="background: white; border-radius: 1.5rem; padding: 2rem; 
+                  max-width: 500px; width: 90%; max-height: 90vh;
                   box-shadow: 0 20px 60px rgba(0,0,0,0.3);"
            (click)="$event.stopPropagation()">
         
