@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoriaService } from '../../../services/categoria.service';
+import { CategoriaService, Categoria } from '../../../services/categoria.service';
 import { Subscription } from 'rxjs';
 
 interface Produto {
   id: string;
   nome: string;
   descricao: string;
-  preco: number;
+  preco: number; // Preço base (para produtos sem tamanhos)
+  precosPorTamanho?: { [tamanho: string]: number }; // Preços por tamanho
   categoria: string;
   imagem: string;
   disponivel: boolean;
@@ -116,7 +117,13 @@ interface Produto {
 
               <!-- Price -->
               <div style="font-size: 1.25rem; font-weight: bold; color: #10b981; margin-bottom: 0.75rem;">
-                R$ {{ produto.preco.toFixed(2) }}
+                <ng-container *ngIf="produto.precosPorTamanho && Object.keys(produto.precosPorTamanho).length > 0; else precoUnico">
+                  <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">A partir de:</div>
+                  R$ {{ getPrecoMinimo(produto.precosPorTamanho) }}
+                </ng-container>
+                <ng-template #precoUnico>
+                  R$ {{ produto.preco.toFixed(2) }}
+                </ng-template>
               </div>
 
               <!-- Actions -->
@@ -194,10 +201,11 @@ interface Produto {
             </label>
             <select [(ngModel)]="formData.categoria" 
                     name="categoria"
+                    (change)="onCategoriaChange()"
                     required
                     style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; 
                            border-radius: 0.75rem; font-size: 1rem;
-                           transition: border-color 0.2s; background: white;">
+                           transition: border-color 0.2s; background: white; cursor: pointer;">
               <option value="">Selecione uma categoria</option>
               <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
             </select>
@@ -218,8 +226,44 @@ interface Produto {
                              transition: border-color 0.2s;"></textarea>
           </div>
 
-          <!-- Preço -->
-          <div style="margin-bottom: 1.5rem;">
+          <!-- Preços por Tamanho (se categoria tem tamanhos) -->
+          <div *ngIf="categoriaSelecionada?.tamanhos && categoriaSelecionada.tamanhos.length > 0" 
+               style="margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.75rem; border: 2px dashed #d1d5db;">
+            <label style="display: block; font-weight: 600; color: #374151; 
+                          margin-bottom: 0.75rem; font-size: 0.875rem;">
+              📏 Preços por Tamanho *
+            </label>
+            
+            <div style="display: grid; gap: 0.75rem;">
+              <div *ngFor="let tamanho of categoriaSelecionada.tamanhos" 
+                   style="display: flex; align-items: center; gap: 0.75rem;">
+                <label style="flex: 1; font-weight: 500; color: #6b7280; font-size: 0.875rem;">
+                  {{ tamanho.nome }}
+                  <span style="color: #9ca3af; font-size: 0.75rem;">
+                    ({{ tamanho.multiplicador }}x)
+                  </span>
+                </label>
+                <div style="flex: 2; position: relative;">
+                  <span style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); 
+                               color: #6b7280; font-weight: 600;">R$</span>
+                  <input type="number" 
+                         [(ngModel)]="formData.precosPorTamanho[tamanho.nome]"
+                         [name]="'preco_' + tamanho.nome"
+                         required
+                         step="0.01"
+                         min="0"
+                         placeholder="0.00"
+                         style="width: 100%; padding: 0.875rem 0.875rem 0.875rem 2.5rem; 
+                                border: 2px solid #e5e7eb; border-radius: 0.5rem; 
+                                font-size: 1rem; transition: border-color 0.2s;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preço Único (se categoria NÃO tem tamanhos) -->
+          <div *ngIf="!categoriaSelecionada?.tamanhos || categoriaSelecionada.tamanhos.length === 0" 
+               style="margin-bottom: 1.5rem;">
             <label style="display: block; font-weight: 600; color: #374151; 
                           margin-bottom: 0.5rem; font-size: 0.875rem;">
               Preço (R$) *
@@ -309,6 +353,8 @@ interface Produto {
 export class ProductsComponent implements OnInit, OnDestroy {
   produtos: Produto[] = [];
   categorias: string[] = [];
+  categoriasCompletas: Categoria[] = []; // Guardar categorias com tamanhos
+  categoriaSelecionada: Categoria | null = null;
   filtroCategoria = 'todos';
   showModal = false;
   editingProduto: Produto | null = null;
@@ -318,6 +364,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     nome: '',
     descricao: '',
     preco: 0,
+    precosPorTamanho: {} as { [key: string]: number },
     categoria: '',
     imagem: '🍕',
     disponivel: true
@@ -328,9 +375,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(private categoriaService: CategoriaService) {}
 
   ngOnInit() {
-    // Carregar categorias do serviço
+    // Carregar categorias completas com tamanhos
     this.subscription = this.categoriaService.getCategorias().subscribe(cats => {
-      this.categorias = cats.map(c => c.nome);
+      this.categoriasCompletas = cats.filter(c => c.ativo);
+      this.categorias = this.categoriasCompletas.map(c => c.nome);
       console.log('📁 Categorias carregadas:', this.categorias);
     });
 
@@ -400,14 +448,34 @@ export class ProductsComponent implements OnInit, OnDestroy {
   openModal() {
     this.showModal = true;
     this.editingProduto = null;
+    this.categoriaSelecionada = null;
     this.formData = {
       nome: '',
       descricao: '',
       preco: 0,
+      precosPorTamanho: {},
       categoria: '',
       imagem: '🍕',
       disponivel: true
     };
+  }
+
+  onCategoriaChange() {
+    // Encontrar categoria selecionada
+    this.categoriaSelecionada = this.categoriasCompletas.find(
+      c => c.nome === this.formData.categoria
+    ) || null;
+    
+    // Se categoria tem tamanhos, inicializar preços
+    if (this.categoriaSelecionada?.tamanhos?.length > 0) {
+      this.formData.precosPorTamanho = {};
+      this.categoriaSelecionada.tamanhos.forEach(t => {
+        this.formData.precosPorTamanho[t.nome] = 0;
+      });
+      console.log('📏 Tamanhos detectados:', this.categoriaSelecionada.tamanhos);
+    } else {
+      this.formData.precosPorTamanho = {};
+    }
   }
 
   closeModal() {
@@ -417,7 +485,21 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   editProduto(produto: Produto) {
     this.editingProduto = produto;
-    this.formData = { ...produto };
+    this.formData = {
+      nome: produto.nome,
+      descricao: produto.descricao,
+      preco: produto.preco,
+      precosPorTamanho: produto.precosPorTamanho ? {...produto.precosPorTamanho} : {},
+      categoria: produto.categoria,
+      imagem: produto.imagem,
+      disponivel: produto.disponivel
+    };
+    
+    // Carregar categoria selecionada
+    this.categoriaSelecionada = this.categoriasCompletas.find(
+      c => c.nome === produto.categoria
+    ) || null;
+    
     this.showModal = true;
   }
 
@@ -427,24 +509,46 @@ export class ProductsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.formData.preco <= 0) {
-      alert('O preço deve ser maior que zero');
-      return;
+    // Validar preços
+    const temTamanhos = this.categoriaSelecionada?.tamanhos?.length > 0;
+    
+    if (temTamanhos) {
+      // Validar que todos os tamanhos têm preço
+      const todosPreenchidos = Object.values(this.formData.precosPorTamanho)
+        .every(preco => preco > 0);
+      
+      if (!todosPreenchidos) {
+        alert('Por favor, preencha o preço de todos os tamanhos');
+        return;
+      }
+    } else {
+      // Produto sem tamanhos - validar preço único
+      if (this.formData.preco <= 0) {
+        alert('O preço deve ser maior que zero');
+        return;
+      }
     }
+
+    const produto: Produto = {
+      id: this.editingProduto?.id || Date.now().toString(),
+      nome: this.formData.nome,
+      descricao: this.formData.descricao,
+      preco: temTamanhos ? 0 : this.formData.preco,
+      precosPorTamanho: temTamanhos ? this.formData.precosPorTamanho : undefined,
+      categoria: this.formData.categoria,
+      imagem: this.formData.imagem,
+      disponivel: this.formData.disponivel
+    };
 
     if (this.editingProduto) {
       // Update existing
       const index = this.produtos.findIndex(p => p.id === this.editingProduto!.id);
       if (index !== -1) {
-        this.produtos[index] = { ...this.editingProduto, ...this.formData };
+        this.produtos[index] = produto;
       }
     } else {
       // Add new
-      const newProduto: Produto = {
-        id: Date.now().toString(),
-        ...this.formData
-      };
-      this.produtos.push(newProduto);
+      this.produtos.push(produto);
     }
 
     this.closeModal();
@@ -461,5 +565,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
       return this.produtos;
     }
     return this.produtos.filter(p => p.categoria === this.filtroCategoria);
+  }
+
+  getPrecoMinimo(precosPorTamanho: { [key: string]: number }): string {
+    const precos = Object.values(precosPorTamanho);
+    if (precos.length === 0) {
+      return '0.00';
+    }
+    const minimo = Math.min(...precos);
+    return minimo.toFixed(2);
   }
 }
