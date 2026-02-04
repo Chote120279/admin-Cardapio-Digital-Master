@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CategoriaService } from '../../../services/categoria.service';
+import { Subscription } from 'rxjs';
 
 interface Adicional {
   nome: string;
@@ -368,10 +370,11 @@ interface Categoria {
     }
   `]
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
   categorias: Categoria[] = [];
   showModal = false;
   editingCategoria: Categoria | null = null;
+  private subscription?: Subscription;
   
   formData = {
     nome: '',
@@ -388,52 +391,18 @@ export class CategoriesComponent implements OnInit {
 
   emojis = ['🍕', '🍔', '🌮', '🍜', '🍱', '🥗', '🍰', '🧁', '☕', '🥤', '🍺', '🍷', '🥘', '🍝', '🥩', '🐟'];
 
+  constructor(private categoriaService: CategoriaService) {}
+
   ngOnInit() {
-    // Sample data
-    this.categorias = [
-      {
-        id: '1',
-        nome: 'Pizzas',
-        descricao: 'Pizzas tradicionais e especiais',
-        icone: '🍕',
-        ativo: true,
-        adicionais: [
-          { nome: 'Queijo extra', preco: 5.00 },
-          { nome: 'Bacon', preco: 7.00 },
-          { nome: 'Azeitonas', preco: 3.00 }
-        ],
-        tamanhos: [
-          { nome: 'Pequena', multiplicador: 0.8 },
-          { nome: 'Média', multiplicador: 1.0 },
-          { nome: 'Grande', multiplicador: 1.3 }
-        ]
-      },
-      {
-        id: '2',
-        nome: 'Bebidas',
-        descricao: 'Refrigerantes, sucos e outras bebidas',
-        icone: '🥤',
-        ativo: true,
-        adicionais: [],
-        tamanhos: [
-          { nome: '350ml', multiplicador: 1.0 },
-          { nome: '600ml', multiplicador: 1.5 },
-          { nome: '2L', multiplicador: 2.5 }
-        ]
-      },
-      {
-        id: '3',
-        nome: 'Sobremesas',
-        descricao: 'Doces e sobremesas deliciosas',
-        icone: '🍰',
-        ativo: true,
-        adicionais: [
-          { nome: 'Chantilly', preco: 3.00 },
-          { nome: 'Calda extra', preco: 2.00 }
-        ],
-        tamanhos: []
-      }
-    ];
+    // Carregar categorias do serviço
+    this.subscription = this.categoriaService.getCategorias().subscribe(cats => {
+      this.categorias = cats;
+      console.log('📁 Categorias carregadas:', cats.map(c => c.nome));
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   openModal() {
@@ -468,19 +437,22 @@ export class CategoriesComponent implements OnInit {
       return;
     }
 
+    const categoria: Categoria = {
+      id: this.editingCategoria?.id || Date.now().toString(),
+      nome: this.formData.nome,
+      descricao: this.formData.descricao,
+      icone: this.formData.icone,
+      ativo: this.formData.ativo,
+      adicionais: this.formData.adicionais,
+      tamanhos: this.formData.tamanhos
+    };
+
     if (this.editingCategoria) {
-      // Update existing
-      const index = this.categorias.findIndex(c => c.id === this.editingCategoria!.id);
-      if (index !== -1) {
-        this.categorias[index] = { ...this.editingCategoria, ...this.formData };
-      }
+      // Atualizar existente
+      this.categoriaService.updateCategoria(categoria.id, categoria);
     } else {
-      // Add new
-      const newCategoria: Categoria = {
-        id: Date.now().toString(),
-        ...this.formData
-      };
-      this.categorias.push(newCategoria);
+      // Adicionar nova
+      this.categoriaService.addCategoria(categoria);
     }
 
     this.closeModal();
@@ -488,7 +460,7 @@ export class CategoriesComponent implements OnInit {
 
   deleteCategoria(id: string) {
     if (confirm('Tem certeza que deseja excluir esta categoria?')) {
-      this.categorias = this.categorias.filter(c => c.id !== id);
+      this.categoriaService.deleteCategoria(id);
     }
   }
 

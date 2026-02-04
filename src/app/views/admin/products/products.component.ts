@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CategoriaService } from '../../../services/categoria.service';
+import { Subscription } from 'rxjs';
 
 interface Produto {
   id: string;
@@ -304,12 +306,13 @@ interface Produto {
     }
   `]
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
   produtos: Produto[] = [];
-  categorias: string[] = ['Pizzas', 'Bebidas', 'Sobremesas', 'Lanches', 'Pratos'];
+  categorias: string[] = [];
   filtroCategoria = 'todos';
   showModal = false;
   editingProduto: Produto | null = null;
+  private subscription?: Subscription;
   
   formData = {
     nome: '',
@@ -322,7 +325,15 @@ export class ProductsComponent implements OnInit {
 
   emojis = ['🍕', '🍔', '🌮', '🍜', '🍱', '🥗', '🍰', '🧁', '☕', '🥤', '🍺', '🍷', '🥘', '🍝', '🥩', '🐟', '🍤', '🌭', '🥙', '🍟', '🥓', '🧀', '🍪', '🎂'];
 
+  constructor(private categoriaService: CategoriaService) {}
+
   ngOnInit() {
+    // Carregar categorias do serviço
+    this.subscription = this.categoriaService.getCategorias().subscribe(cats => {
+      this.categorias = cats.map(c => c.nome);
+      console.log('📁 Categorias carregadas:', this.categorias);
+    });
+
     // Sample data
     this.produtos = [
       {
@@ -380,6 +391,10 @@ export class ProductsComponent implements OnInit {
         disponivel: false
       }
     ];
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   openModal() {
