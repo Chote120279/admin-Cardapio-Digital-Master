@@ -117,9 +117,9 @@ interface Produto {
 
               <!-- Price -->
               <div style="font-size: 1.25rem; font-weight: bold; color: #10b981; margin-bottom: 0.75rem;">
-                <ng-container *ngIf="produto.precosPorTamanho && Object.keys(produto.precosPorTamanho).length > 0; else precoUnico">
+                <ng-container *ngIf="produto.precosPorTamanho && Object.keys(produto.precosPorTamanho || {}).length > 0; else precoUnico">
                   <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.25rem;">A partir de:</div>
-                  R$ {{ getPrecoMinimo(produto.precosPorTamanho) }}
+                  R$ {{ getPrecoMinimo(produto.precosPorTamanho!) }}
                 </ng-container>
                 <ng-template #precoUnico>
                   R$ {{ produto.preco.toFixed(2) }}
