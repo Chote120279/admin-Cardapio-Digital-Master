@@ -33,3 +33,39 @@ body {
   background: #555;
 }
 
+/* ====================================
+   SCROLLBAR PERSONALIZADA PARA MODAIS
+   ==================================== */
+
+.modal-content-scrollable {
+  overflow-y: scroll !important;
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 #f3f4f6;
+}
+
+/* Chrome, Safari, Edge */
+.modal-content-scrollable::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modal-content-scrollable::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.modal-content-scrollable::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  border: 2px solid #f3f4f6;
+}
+
+.modal-content-scrollable::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Scroll suave */
+.modal-content-scrollable {
+  scroll-behavior: smooth;
+}
+
