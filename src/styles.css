@@ -1,5 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* CSS Variables for Theming */
+:root {
+  --cor-primaria: #667eea;
+  --cor-secundaria: #764ba2;
+  --cor-destaque: #10b981;
+  --cor-texto: #111827;
+  --cor-fundo: #f3f4f6;
+  --cor-texto-secundario: #6b7280;
+}
+
 * {
   margin: 0;
   padding: 0;

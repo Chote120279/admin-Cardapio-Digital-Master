@@ -1,0 +1,552 @@
+<div style="background: #f3f4f6; min-height: 100vh; padding: 2rem;">
+  <div style="max-width: 1400px; margin: 0 auto;">
+    
+    <!-- Header -->
+    <div style="background: white; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 style="font-size: 2.5rem; font-weight: bold; color: #111827; margin-bottom: 0.5rem;">
+            ⚙️ Configurações do App
+          </h1>
+          <p style="color: #6b7280; font-size: 1.125rem;">
+            Personalize todo o visual e configurações do seu cardápio digital
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+      <!-- Tab Headers -->
+      <div style="display: flex; border-bottom: 2px solid #e5e7eb; overflow-x: auto;">
+        <button (click)="setActiveTab('restaurante')"
+                [style.background]="activeTab === 'restaurante' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'transparent'"
+                [style.color]="activeTab === 'restaurante' ? 'white' : '#6b7280'"
+                style="flex: 1; padding: 1.25rem 2rem; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+          🏪 Restaurante
+        </button>
+        <button (click)="setActiveTab('tema')"
+                [style.background]="activeTab === 'tema' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'transparent'"
+                [style.color]="activeTab === 'tema' ? 'white' : '#6b7280'"
+                style="flex: 1; padding: 1.25rem 2rem; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+          🎨 Tema
+        </button>
+        <button (click)="setActiveTab('produtos')"
+                [style.background]="activeTab === 'produtos' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'transparent'"
+                [style.color]="activeTab === 'produtos' ? 'white' : '#6b7280'"
+                style="flex: 1; padding: 1.25rem 2rem; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+          🍕 Produtos
+        </button>
+        <button (click)="setActiveTab('aparencia')"
+                [style.background]="activeTab === 'aparencia' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'transparent'"
+                [style.color]="activeTab === 'aparencia' ? 'white' : '#6b7280'"
+                style="flex: 1; padding: 1.25rem 2rem; border: none; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+          📱 Aparência
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div style="padding: 2rem;">
+
+        <!-- Tab 1: Restaurante -->
+        <div *ngIf="activeTab === 'restaurante'" class="tab-content">
+          <h2 style="font-size: 1.75rem; font-weight: bold; color: #111827; margin-bottom: 1.5rem;">
+            🏪 Informações do Restaurante
+          </h2>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <!-- Nome do Restaurante -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Nome do Restaurante
+              </label>
+              <input [(ngModel)]="config.nomeRestaurante" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Logo -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Logo (Emoji ou URL)
+              </label>
+              <input [(ngModel)]="config.logo" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Telefone -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Telefone
+              </label>
+              <input [(ngModel)]="config.telefone" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- WhatsApp -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                WhatsApp (para pedidos)
+              </label>
+              <input [(ngModel)]="config.whatsapp" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Instagram -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Instagram
+              </label>
+              <input [(ngModel)]="config.instagram" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Endereço -->
+            <div style="grid-column: 1 / -1;">
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Endereço Completo
+              </label>
+              <input [(ngModel)]="config.endereco" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Horário de Funcionamento -->
+            <div style="grid-column: 1 / -1;">
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Horário de Funcionamento
+              </label>
+              <input [(ngModel)]="config.horarioFuncionamento" type="text"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.5rem; font-weight: bold; color: #111827; margin-top: 2rem; margin-bottom: 1rem;">
+            🚚 Configurações Operacionais
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <!-- Taxa de Entrega -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Taxa de Entrega (R$)
+              </label>
+              <input [(ngModel)]="config.taxaEntrega" type="number" step="0.01"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Tempo de Entrega -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Tempo Médio de Entrega (min)
+              </label>
+              <input [(ngModel)]="config.tempoEntregaMin" type="number"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Pedido Mínimo -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Pedido Mínimo (R$)
+              </label>
+              <input [(ngModel)]="config.pedidoMinimo" type="number" step="0.01"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+
+            <!-- Raio de Entrega -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Raio de Entrega (km)
+              </label>
+              <input [(ngModel)]="config.raioEntrega" type="number"
+                     style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.5rem; font-weight: bold; color: #111827; margin-top: 2rem; margin-bottom: 1rem;">
+            💳 Formas de Pagamento
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.formasPagamento.pix" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">✅ PIX</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.formasPagamento.dinheiro" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">💵 Dinheiro</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.formasPagamento.cartaoDebito" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">💳 Cartão Débito</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.formasPagamento.cartaoCredito" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">💳 Cartão Crédito</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Tab 2: Tema e Cores -->
+        <div *ngIf="activeTab === 'tema'" class="tab-content">
+          <h2 style="font-size: 1.75rem; font-weight: bold; color: #111827; margin-bottom: 1.5rem;">
+            🎨 Personalização de Cores
+          </h2>
+
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">
+            Temas Pré-definidos
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div *ngFor="let theme of preDefinedThemes" (click)="selectTheme(theme)"
+                 [style.border]="config.tema.nome === theme.nome ? '3px solid var(--cor-primaria)' : '2px solid #e5e7eb'"
+                 style="padding: 1rem; border-radius: 0.75rem; cursor: pointer; transition: all 0.2s; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem;">{{ theme.nome }}</div>
+              <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div [style.background]="theme.corPrimaria" style="width: 30px; height: 30px; border-radius: 0.25rem; border: 1px solid #e5e7eb;"></div>
+                <div [style.background]="theme.corSecundaria" style="width: 30px; height: 30px; border-radius: 0.25rem; border: 1px solid #e5e7eb;"></div>
+                <div [style.background]="theme.corDestaque" style="width: 30px; height: 30px; border-radius: 0.25rem; border: 1px solid #e5e7eb;"></div>
+              </div>
+              <div style="font-size: 0.75rem; color: #6b7280;">{{ theme.corPrimaria }}</div>
+            </div>
+          </div>
+
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">
+            Personalizar Cores
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <!-- Cor Primária -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor Primária (botões, destaques)
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corPrimaria" (change)="updateCustomColor('corPrimaria', config.tema.corPrimaria)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corPrimaria" (change)="updateCustomColor('corPrimaria', config.tema.corPrimaria)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+
+            <!-- Cor Secundária -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor Secundária (backgrounds, cards)
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corSecundaria" (change)="updateCustomColor('corSecundaria', config.tema.corSecundaria)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corSecundaria" (change)="updateCustomColor('corSecundaria', config.tema.corSecundaria)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+
+            <!-- Cor de Destaque -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor de Destaque (promoções, badges)
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corDestaque" (change)="updateCustomColor('corDestaque', config.tema.corDestaque)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corDestaque" (change)="updateCustomColor('corDestaque', config.tema.corDestaque)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+
+            <!-- Cor do Texto -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor do Texto Principal
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corTexto" (change)="updateCustomColor('corTexto', config.tema.corTexto)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corTexto" (change)="updateCustomColor('corTexto', config.tema.corTexto)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+
+            <!-- Cor de Fundo -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor de Fundo
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corFundo" (change)="updateCustomColor('corFundo', config.tema.corFundo)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corFundo" (change)="updateCustomColor('corFundo', config.tema.corFundo)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+
+            <!-- Cor do Texto Secundário -->
+            <div>
+              <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                Cor do Texto Secundário
+              </label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input [(ngModel)]="config.tema.corTextoSecundario" (change)="updateCustomColor('corTextoSecundario', config.tema.corTextoSecundario)" type="color"
+                       style="width: 60px; height: 45px; border: 2px solid #e5e7eb; border-radius: 0.5rem; cursor: pointer;">
+                <input [(ngModel)]="config.tema.corTextoSecundario" (change)="updateCustomColor('corTextoSecundario', config.tema.corTextoSecundario)" type="text"
+                       style="flex: 1; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview ao Vivo -->
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-top: 2rem; margin-bottom: 1rem;">
+            👀 Preview ao Vivo
+          </h3>
+          <div style="padding: 2rem; background: var(--cor-fundo); border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+              <span style="font-size: 3rem;">{{ config.logo }}</span>
+              <h2 style="font-size: 1.5rem; font-weight: bold; color: var(--cor-texto); margin-top: 0.5rem;">
+                {{ config.nomeRestaurante }}
+              </h2>
+              <p style="color: var(--cor-texto-secundario); margin-top: 0.25rem;">
+                {{ config.horarioFuncionamento }}
+              </p>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <button style="background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%); 
+                             color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; 
+                             font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                Botão Primário
+              </button>
+              <span style="background: var(--cor-destaque); color: white; padding: 0.5rem 1rem; 
+                           border-radius: 0.25rem; font-weight: 600;">
+                🔥 Promoção
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Produtos -->
+        <div *ngIf="activeTab === 'produtos'" class="tab-content">
+          <h2 style="font-size: 1.75rem; font-weight: bold; color: #111827; margin-bottom: 1.5rem;">
+            🍕 Configurações de Produtos
+          </h2>
+
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Pizza Meio a Meio -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+              <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                <input [(ngModel)]="config.produtos.permiteMeioAMeio" type="checkbox"
+                       style="width: 24px; height: 24px; cursor: pointer;">
+                <div style="flex: 1;">
+                  <div style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">
+                    Permitir Pizza Meio a Meio (2 Sabores)
+                  </div>
+                  <div style="font-size: 0.875rem; color: #6b7280;">
+                    Cliente pode escolher 2 sabores. O preço será do sabor mais caro.
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Limite de Adicionais -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+              <label style="display: block; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+                Limite de Adicionais por Produto
+              </label>
+              <input [(ngModel)]="config.produtos.limiteAdicionais" type="number" min="0" max="50"
+                     style="width: 150px; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem;">
+              <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">
+                Define quantos adicionais o cliente pode adicionar por produto
+              </p>
+            </div>
+
+            <!-- Primeiro Adicional Grátis -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+              <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                <input [(ngModel)]="config.produtos.primeiroAdicionalGratis" type="checkbox"
+                       style="width: 24px; height: 24px; cursor: pointer;">
+                <div style="flex: 1;">
+                  <div style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">
+                    Primeiro Adicional Grátis
+                  </div>
+                  <div style="font-size: 0.875rem; color: #6b7280;">
+                    O primeiro adicional escolhido não será cobrado (ex: primeira borda grátis)
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Exibir Tempo de Preparo -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+              <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                <input [(ngModel)]="config.produtos.exibirTempoPreparo" type="checkbox"
+                       style="width: 24px; height: 24px; cursor: pointer;">
+                <div style="flex: 1;">
+                  <div style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">
+                    Exibir Tempo de Preparo
+                  </div>
+                  <div style="font-size: 0.875rem; color: #6b7280;">
+                    Mostra o tempo estimado de preparo nos produtos
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Exibir Avaliações -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.75rem; border: 2px solid #e5e7eb;">
+              <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                <input [(ngModel)]="config.produtos.exibirAvaliacoes" type="checkbox"
+                       style="width: 24px; height: 24px; cursor: pointer;">
+                <div style="flex: 1;">
+                  <div style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">
+                    Exibir Avaliações
+                  </div>
+                  <div style="font-size: 0.875rem; color: #6b7280;">
+                    Mostra as avaliações e estrelas dos produtos
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Aparência -->
+        <div *ngIf="activeTab === 'aparencia'" class="tab-content">
+          <h2 style="font-size: 1.75rem; font-weight: bold; color: #111827; margin-bottom: 1.5rem;">
+            📱 Aparência do Cardápio
+          </h2>
+
+          <!-- Layout do Cardápio -->
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">
+            Layout do Cardápio
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <label style="padding: 1.5rem; border-radius: 0.75rem; cursor: pointer; text-align: center; transition: all 0.2s;"
+                   [style.background]="config.aparencia.layoutCardapio === 'lista' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'white'"
+                   [style.color]="config.aparencia.layoutCardapio === 'lista' ? 'white' : '#374151'"
+                   [style.border]="config.aparencia.layoutCardapio === 'lista' ? '3px solid var(--cor-primaria)' : '2px solid #e5e7eb'">
+              <input [(ngModel)]="config.aparencia.layoutCardapio" type="radio" name="layout" value="lista" style="display: none;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📱</div>
+              <div style="font-weight: 600;">Lista</div>
+              <div style="font-size: 0.875rem; margin-top: 0.25rem; opacity: 0.8;">Vertical</div>
+            </label>
+
+            <label style="padding: 1.5rem; border-radius: 0.75rem; cursor: pointer; text-align: center; transition: all 0.2s;"
+                   [style.background]="config.aparencia.layoutCardapio === 'grid' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'white'"
+                   [style.color]="config.aparencia.layoutCardapio === 'grid' ? 'white' : '#374151'"
+                   [style.border]="config.aparencia.layoutCardapio === 'grid' ? '3px solid var(--cor-primaria)' : '2px solid #e5e7eb'">
+              <input [(ngModel)]="config.aparencia.layoutCardapio" type="radio" name="layout" value="grid" style="display: none;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎴</div>
+              <div style="font-weight: 600;">Grid</div>
+              <div style="font-size: 0.875rem; margin-top: 0.25rem; opacity: 0.8;">Cards</div>
+            </label>
+
+            <label style="padding: 1.5rem; border-radius: 0.75rem; cursor: pointer; text-align: center; transition: all 0.2s;"
+                   [style.background]="config.aparencia.layoutCardapio === 'galeria' ? 'linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%)' : 'white'"
+                   [style.color]="config.aparencia.layoutCardapio === 'galeria' ? 'white' : '#374151'"
+                   [style.border]="config.aparencia.layoutCardapio === 'galeria' ? '3px solid var(--cor-primaria)' : '2px solid #e5e7eb'">
+              <input [(ngModel)]="config.aparencia.layoutCardapio" type="radio" name="layout" value="galeria" style="display: none;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖼️</div>
+              <div style="font-weight: 600;">Galeria</div>
+              <div style="font-size: 0.875rem; margin-top: 0.25rem; opacity: 0.8;">Imagens Grandes</div>
+            </label>
+          </div>
+
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">
+            Exibir/Ocultar Elementos
+          </h3>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.aparencia.exibirDescricao" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">Descrição dos produtos</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.aparencia.exibirMaisVendido" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">Selo "Mais vendido"</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.aparencia.exibirPromocao" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">Badge "Promoção"</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem; cursor: pointer;">
+              <input [(ngModel)]="config.aparencia.animacoes" type="checkbox"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+              <span style="font-weight: 600; color: #374151;">Animações e efeitos</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; flex-wrap: wrap;">
+      <div style="display: flex; gap: 1rem;">
+        <button (click)="cancelChanges()"
+                style="padding: 1rem 2rem; background: white; color: #6b7280; border: 2px solid #e5e7eb; 
+                       border-radius: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          ❌ Cancelar
+        </button>
+        <button (click)="resetSettings()"
+                style="padding: 1rem 2rem; background: white; color: #ef4444; border: 2px solid #ef4444; 
+                       border-radius: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          🔄 Resetar
+        </button>
+      </div>
+      <button (click)="saveSettings()"
+              style="padding: 1rem 2rem; background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%); 
+                     color: white; border: none; border-radius: 0.75rem; font-weight: 600; cursor: pointer; 
+                     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: all 0.2s;">
+        💾 Salvar Todas as Configurações
+      </button>
+    </div>
+
+    <!-- Save Notification -->
+    <div *ngIf="showSaveNotification"
+         style="position: fixed; top: 2rem; right: 2rem; background: #10b981; color: white; 
+                padding: 1rem 2rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                font-weight: 600; animation: slideIn 0.3s ease; z-index: 1000;">
+      ✅ Configurações salvas com sucesso!
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .tab-content {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
