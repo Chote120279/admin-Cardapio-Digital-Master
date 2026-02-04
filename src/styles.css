@@ -34,13 +34,14 @@ body {
 }
 
 /* ====================================
-   SCROLLBAR PERSONALIZADA PARA MODAIS
+   CUSTOM SCROLLBAR FOR MODALS
    ==================================== */
 
 .modal-content-scrollable {
   overflow-y: scroll !important;
   scrollbar-width: thin;
   scrollbar-color: #8b5cf6 #f3f4f6;
+  scroll-behavior: smooth;
 }
 
 /* Chrome, Safari, Edge */
@@ -62,10 +63,5 @@ body {
 
 .modal-content-scrollable::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-/* Scroll suave */
-.modal-content-scrollable {
-  scroll-behavior: smooth;
 }
 
