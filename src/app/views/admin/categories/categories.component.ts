@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../../services/categoria.service';
+import { Subscription } from 'rxjs';
 
 interface Adicional {
   nome: string;
@@ -369,10 +370,11 @@ interface Categoria {
     }
   `]
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
   categorias: Categoria[] = [];
   showModal = false;
   editingCategoria: Categoria | null = null;
+  private subscription?: Subscription;
   
   formData = {
     nome: '',
@@ -393,10 +395,14 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit() {
     // Carregar categorias do serviço
-    this.categoriaService.getCategorias().subscribe(cats => {
+    this.subscription = this.categoriaService.getCategorias().subscribe(cats => {
       this.categorias = cats;
       console.log('📁 Categorias carregadas:', cats.map(c => c.nome));
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   openModal() {

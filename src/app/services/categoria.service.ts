@@ -29,7 +29,8 @@ export class CategoriaService {
         this.categorias$.next(parsed);
         console.log('✅ Categorias carregadas do localStorage:', parsed);
       } catch (e) {
-        console.error('❌ Erro ao carregar categorias:', e);
+        console.error('❌ Erro ao carregar categorias do localStorage:', e);
+        console.error('Dados armazenados (possivelmente corrompidos):', stored);
       }
     } else {
       console.log('ℹ️ Nenhuma categoria no localStorage');
