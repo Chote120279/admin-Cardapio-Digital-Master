@@ -3,6 +3,7 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { OrdersComponent } from './views/admin/orders/orders.component';
 import { ProductsComponent } from './views/admin/products/products.component';
 import { CategoriesComponent } from './views/admin/categories/categories.component';
+import { SettingsComponent } from './views/admin/settings/settings.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
       {
         path: 'orders',
         component: OrdersComponent
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent
       }
     ]
   }
